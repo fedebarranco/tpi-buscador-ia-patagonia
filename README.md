@@ -25,11 +25,11 @@ Este repositorio aloja la documentación del proyecto: el proceso modelado en BP
 
 ## Declaración de Uso de IA
 
-Usé Claude (un asistente de IA) para ordenar y revisar la redacción de las entregas, generar los gráficos (FODA, Gantt, organigrama y diagrama BPMN) y armar la estructura de este repositorio y del tablero.
+Usé Claude (un asistente de IA) como apoyo en cosas puntuales: ordenar la redacción de algunas partes, dibujar los gráficos (FODA, Gantt, organigrama y diagrama BPMN) y armar la estructura de este repositorio.
 
-Prompts principales: armar el BPMN del circuito del proyecto con pools, lanes y una compuerta de excepción; redactar las historias de usuario en el formato "Como, quiero, para"; proponer indicadores de control a partir de las metas de la Entrega 2.
+Prompts principales: dibujar el BPMN del circuito del proyecto que yo le describí, con pools, lanes y una compuerta de excepción, y redactar las historias de usuario en el formato "Como, quiero, para".
 
-Correcciones propias sobre lo que propuso la IA:
+El proyecto, los datos, el análisis y las decisiones son míos. Corregí lo que propuso:
 - Cambié la tercera historia de usuario: la IA había propuesto una sobre precios de descuento, que corresponde a otra app y no a Boost.
 - Saqué los nombres del organigrama, como pidió el tutor.
 - Ajusté el estado y las fechas del proyecto a lo que pasa realmente en el trabajo.
