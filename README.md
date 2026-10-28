@@ -19,7 +19,8 @@ Este repositorio aloja la documentación del proyecto: el proceso modelado en BP
 
 ## Contenido
 
-- `docs/bpmn/`: diagrama BPMN del proceso.
+- `docs/entregas/`: las cuatro entregas parciales del TPI y el documento final consolidado.
+- `docs/diagramas/`: diagramas del trabajo (sistema abierto, FODA, Gantt, organigrama y BPMN).
 - `docs/historias/`: las tres historias de usuario del backlog.
 - `docs/indicadores-de-control.md`: indicadores para evaluar si el proyecto funciona.
 
