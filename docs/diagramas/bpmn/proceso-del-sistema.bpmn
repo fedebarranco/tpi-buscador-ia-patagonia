@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="defs" targetNamespace="http://tpi.local/bpmn">
+<collaboration id="col">
+<participant id="P_cli" name="Cliente" processRef="Proc_cli"/>
+<participant id="P_sis" name="Sistema de la tienda" processRef="Proc_sis"/>
+<participant id="P_pag" name="Pasarela de pagos" processRef="Proc_pag"/>
+<messageFlow id="m1" name="búsqueda" sourceRef="C0" targetRef="S1"/>
+<messageFlow id="m2" name="resultados" sourceRef="S4" targetRef="C1"/>
+<messageFlow id="m3" name="elegido" sourceRef="C1" targetRef="T1"/>
+<messageFlow id="m4" name="pedido" sourceRef="T3" targetRef="P1"/>
+<messageFlow id="m5" name="resultado del pago" sourceRef="P1" targetRef="T3"/>
+<messageFlow id="m6" name="confirmación" sourceRef="T5" targetRef="C2"/>
+<messageFlow id="m7" name="motivo" sourceRef="T6" targetRef="C2"/>
+</collaboration>
+<process id="Proc_cli" isExecutable="false">
+<startEvent id="C0" name="Escribe lo que busca"><outgoing>s1</outgoing></startEvent>
+<task id="C1" name="Elegir un producto, talle y color"><incoming>s1</incoming><outgoing>s2</outgoing></task>
+<task id="C2" name="Ver el resultado de la compra"><incoming>s2</incoming><outgoing>s3</outgoing></task>
+<endEvent id="C3" name="Fin"><incoming>s3</incoming></endEvent>
+<sequenceFlow id="s1" name="" sourceRef="C0" targetRef="C1"/>
+<sequenceFlow id="s2" name="" sourceRef="C1" targetRef="C2"/>
+<sequenceFlow id="s3" name="" sourceRef="C2" targetRef="C3"/>
+</process>
+<process id="Proc_sis" isExecutable="false">
+<laneSet id="ls">
+<lane id="L_bus" name="Buscador (Boost Turbo con IA)"><flowNodeRef>S1</flowNodeRef><flowNodeRef>S2</flowNodeRef><flowNodeRef>G1</flowNodeRef><flowNodeRef>S3</flowNodeRef><flowNodeRef>S4</flowNodeRef><flowNodeRef>S5</flowNodeRef><flowNodeRef>S6</flowNodeRef></lane>
+<lane id="L_tie" name="Tienda (Shopify: stock y pedidos)"><flowNodeRef>T1</flowNodeRef><flowNodeRef>G2</flowNodeRef><flowNodeRef>T3</flowNodeRef><flowNodeRef>G3</flowNodeRef><flowNodeRef>T4</flowNodeRef><flowNodeRef>T5</flowNodeRef><flowNodeRef>T6</flowNodeRef></lane>
+</laneSet>
+<serviceTask id="S1" name="Interpretar la búsqueda con IA"><outgoing>s4</outgoing></serviceTask>
+<serviceTask id="S2" name="Buscar productos disponibles según los gustos del cliente"><incoming>s4</incoming><outgoing>s5</outgoing></serviceTask>
+<exclusiveGateway id="G1" name="¿Hay resultados?"><incoming>s5</incoming><outgoing>s6</outgoing><outgoing>s7</outgoing></exclusiveGateway>
+<serviceTask id="S3" name="Sugerir productos similares"><incoming>s7</incoming><outgoing>s8</outgoing></serviceTask>
+<serviceTask id="S4" name="Mostrar resultados y productos que combinan"><incoming>s6</incoming><incoming>s8</incoming><outgoing>s9</outgoing></serviceTask>
+<serviceTask id="S5" name="Guardar los datos de la búsqueda"><incoming>s9</incoming><outgoing>s10</outgoing></serviceTask>
+<endEvent id="S6" name="Búsqueda registrada"><incoming>s10</incoming></endEvent>
+<serviceTask id="T1" name="Verificar el stock del producto elegido"><outgoing>s11</outgoing></serviceTask>
+<exclusiveGateway id="G2" name="¿Hay stock?"><incoming>s11</incoming><outgoing>s12</outgoing><outgoing>s13</outgoing></exclusiveGateway>
+<serviceTask id="T3" name="Registrar el pedido y cobrar"><incoming>s12</incoming><outgoing>s14</outgoing></serviceTask>
+<exclusiveGateway id="G3" name="¿Pago aprobado?"><incoming>s14</incoming><outgoing>s15</outgoing><outgoing>s16</outgoing></exclusiveGateway>
+<serviceTask id="T4" name="Descontar el stock"><incoming>s15</incoming><outgoing>s17</outgoing></serviceTask>
+<serviceTask id="T5" name="Confirmar la compra al cliente"><incoming>s17</incoming></serviceTask>
+<serviceTask id="T6" name="Informar el motivo (sin stock o pago rechazado)"><incoming>s13</incoming><incoming>s16</incoming></serviceTask>
+<sequenceFlow id="s4" name="" sourceRef="S1" targetRef="S2"/>
+<sequenceFlow id="s5" name="" sourceRef="S2" targetRef="G1"/>
+<sequenceFlow id="s6" name="Sí" sourceRef="G1" targetRef="S4"/>
+<sequenceFlow id="s7" name="No" sourceRef="G1" targetRef="S3"/>
+<sequenceFlow id="s8" name="" sourceRef="S3" targetRef="S4"/>
+<sequenceFlow id="s9" name="" sourceRef="S4" targetRef="S5"/>
+<sequenceFlow id="s10" name="" sourceRef="S5" targetRef="S6"/>
+<sequenceFlow id="s11" name="" sourceRef="T1" targetRef="G2"/>
+<sequenceFlow id="s12" name="Sí" sourceRef="G2" targetRef="T3"/>
+<sequenceFlow id="s13" name="No" sourceRef="G2" targetRef="T6"/>
+<sequenceFlow id="s14" name="" sourceRef="T3" targetRef="G3"/>
+<sequenceFlow id="s15" name="Sí" sourceRef="G3" targetRef="T4"/>
+<sequenceFlow id="s16" name="" sourceRef="G3" targetRef="T6"/>
+<sequenceFlow id="s17" name="" sourceRef="T4" targetRef="T5"/>
+</process>
+<process id="Proc_pag" isExecutable="false">
+<task id="P1" name="Procesar el pago"></task>
+</process>
+<bpmndi:BPMNDiagram id="d"><bpmndi:BPMNPlane id="pl" bpmnElement="col">
+<bpmndi:BPMNShape id="sh_pc" bpmnElement="P_cli" isHorizontal="true"><dc:Bounds x="0" y="0" width="2071" height="110"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_ps" bpmnElement="P_sis" isHorizontal="true"><dc:Bounds x="0" y="140" width="2071" height="410"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_pp" bpmnElement="P_pag" isHorizontal="true"><dc:Bounds x="0" y="580" width="2071" height="110"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_L_bus" bpmnElement="L_bus" isHorizontal="true"><dc:Bounds x="36" y="140" width="2035" height="190"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_L_tie" bpmnElement="L_tie" isHorizontal="true"><dc:Bounds x="36" y="330" width="2035" height="220"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_C0" bpmnElement="C0"><dc:Bounds x="161.0" y="35.0" width="40" height="40"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_C1" bpmnElement="C1"><dc:Bounds x="981.0" y="18.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_C2" bpmnElement="C2"><dc:Bounds x="1681.0" y="18.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_C3" bpmnElement="C3"><dc:Bounds x="1911.0" y="35.0" width="40" height="40"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_S1" bpmnElement="S1"><dc:Bounds x="106.0" y="178.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_S2" bpmnElement="S2"><dc:Bounds x="281.0" y="178.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_G1" bpmnElement="G1"><dc:Bounds x="501.0" y="185.0" width="60" height="60"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_S3" bpmnElement="S3"><dc:Bounds x="631.0" y="253.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_S4" bpmnElement="S4"><dc:Bounds x="806.0" y="178.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_S5" bpmnElement="S5"><dc:Bounds x="1156.0" y="178.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_S6" bpmnElement="S6"><dc:Bounds x="1386.0" y="195.0" width="40" height="40"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_T1" bpmnElement="T1"><dc:Bounds x="981.0" y="373.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_G2" bpmnElement="G2"><dc:Bounds x="1201.0" y="380.0" width="60" height="60"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_T3" bpmnElement="T3"><dc:Bounds x="1331.0" y="373.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_G3" bpmnElement="G3"><dc:Bounds x="1551.0" y="380.0" width="60" height="60"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_T4" bpmnElement="T4"><dc:Bounds x="1681.0" y="373.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_T5" bpmnElement="T5"><dc:Bounds x="1856.0" y="373.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_T6" bpmnElement="T6"><dc:Bounds x="1768.5" y="463.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="sh_P1" bpmnElement="P1"><dc:Bounds x="1331.0" y="598.0" width="150" height="74"/></bpmndi:BPMNShape>
+<bpmndi:BPMNEdge id="ed_s1" bpmnElement="s1"><di:waypoint x="201.0" y="55"/><di:waypoint x="981.0" y="55"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s2" bpmnElement="s2"><di:waypoint x="1131.0" y="55"/><di:waypoint x="1681.0" y="55"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s3" bpmnElement="s3"><di:waypoint x="1831.0" y="55"/><di:waypoint x="1911.0" y="55"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s4" bpmnElement="s4"><di:waypoint x="256.0" y="215"/><di:waypoint x="281.0" y="215"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s5" bpmnElement="s5"><di:waypoint x="431.0" y="215"/><di:waypoint x="501.0" y="215"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s6" bpmnElement="s6"><di:waypoint x="561.0" y="215"/><di:waypoint x="806.0" y="215"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s7" bpmnElement="s7"><di:waypoint x="531" y="245.0"/><di:waypoint x="531" y="290"/><di:waypoint x="631.0" y="290"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s8" bpmnElement="s8"><di:waypoint x="781.0" y="290"/><di:waypoint x="881" y="290"/><di:waypoint x="881" y="252.0"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s9" bpmnElement="s9"><di:waypoint x="956.0" y="215"/><di:waypoint x="1156.0" y="215"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s10" bpmnElement="s10"><di:waypoint x="1306.0" y="215"/><di:waypoint x="1386.0" y="215"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s11" bpmnElement="s11"><di:waypoint x="1131.0" y="410"/><di:waypoint x="1201.0" y="410"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s12" bpmnElement="s12"><di:waypoint x="1261.0" y="410"/><di:waypoint x="1331.0" y="410"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s13" bpmnElement="s13"><di:waypoint x="1231" y="440.0"/><di:waypoint x="1231" y="500"/><di:waypoint x="1768.5" y="500"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s14" bpmnElement="s14"><di:waypoint x="1481.0" y="410"/><di:waypoint x="1551.0" y="410"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s15" bpmnElement="s15"><di:waypoint x="1611.0" y="410"/><di:waypoint x="1681.0" y="410"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s16" bpmnElement="s16"><di:waypoint x="1581" y="440.0"/><di:waypoint x="1581" y="500"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_s17" bpmnElement="s17"><di:waypoint x="1831.0" y="410"/><di:waypoint x="1856.0" y="410"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_m1" bpmnElement="m1"><di:waypoint x="181" y="75.0"/><di:waypoint x="181" y="178.0"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_m2" bpmnElement="m2"><di:waypoint x="881" y="178.0"/><di:waypoint x="881" y="125"/><di:waypoint x="1031" y="125"/><di:waypoint x="1031" y="92.0"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_m3" bpmnElement="m3"><di:waypoint x="1081" y="92.0"/><di:waypoint x="1081" y="373.0"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_m4" bpmnElement="m4"><di:waypoint x="1381" y="447.0"/><di:waypoint x="1381" y="598.0"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_m5" bpmnElement="m5"><di:waypoint x="1431" y="598.0"/><di:waypoint x="1431" y="447.0"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_m6" bpmnElement="m6"><di:waypoint x="1931" y="373.0"/><di:waypoint x="1931" y="125"/><di:waypoint x="1781" y="125"/><di:waypoint x="1781" y="92.0"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="ed_m7" bpmnElement="m7"><di:waypoint x="1843.5" y="463.0"/><di:waypoint x="1843.5" y="134"/><di:waypoint x="1731" y="134"/><di:waypoint x="1731" y="92.0"/></bpmndi:BPMNEdge>
+</bpmndi:BPMNPlane></bpmndi:BPMNDiagram></definitions>
